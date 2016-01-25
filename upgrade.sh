@@ -3,7 +3,7 @@
 # Script to assist in resolving dependencies for slackbuild updates
 # Depends exclusively on well maintained queue files
 
-# Copyright 2016  Chris Abela, Malta
+# Copyright 2016  Chris Abela <kristofru@gmail.com>, Malta
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
