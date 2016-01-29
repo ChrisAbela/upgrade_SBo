@@ -29,7 +29,7 @@ function step1() {
   # Remove empty lines
   # Sort them alphanumnerically
   # Remove duplicate lines
-  # Add a white space and "u" character to unhighlight the packaage
+  # Add a white space and "u" character to unhighlight the package
   sed 's/#.*$//g
     /^$/d
     s/^\(.*\)$/\1 u/g' $1 \
