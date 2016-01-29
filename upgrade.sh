@@ -3,7 +3,7 @@
 # Script to assist in resolving dependencies for slackbuild updates
 # Depends exclusively on well maintained queue files
 
-# Copyright 2016  Chris Abela, Malta
+# Copyright 2016  Chris Abela <kristofru@gmail.com>, Malta
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -63,9 +63,9 @@ while read -r LINE; do
       echo $i | egrep -qv "$PACKNAME.sqf|upgrade.sqf" && \
         sed 's/#.*$//' $i | \
         egrep -qe "^@${PACKNAME}$|^@${PACKNAME} | @${PACKNAME}$| @${PACKNAME} |^${PACKNAME}$|^${PACKNAME} | ${PACKNAME}$| ${PACKNAME} " && \
-        echo -n $i | \
-        sed 's/\.sqf$//g' && \
-        echo " u"
+          echo -n $i | \
+          sed 's/\.sqf$//g' && \
+          echo " u"
     done
   # If highlighted just spit the line out
   else echo $LINE
@@ -98,6 +98,18 @@ function step4() {
   done < $1
 }
 
+function hash() {
+  # Check if the package is installed
+  # If it is not installed prefix the package name
+  # with a hash (#)
+  VLP=$( basename $( ls /var/log/packages/${PKG}* 2>/dev/null ) 2>/dev/null |\
+    sed 's/-[^-]*-[^-]*-[^-]*$//' 2>/dev/null )
+    if [ "$VLP" != "$PKG" ]; then
+    # PKG is not installed so we print a # in front of the package name 
+    echo -n "#" >> queue.sqf
+  fi
+}
+
 OUT=${OUT:-/tmp/queue}
 N=2
 rm -f queue.sqf
@@ -114,11 +126,17 @@ while true ; do
     # Replace the highlighted field with the sqf suffix of the file
     for i in  $( sed 's/ h/.sqf/' /tmp/queue ); do
     # We need the filename to get its last line
-      if [ -e $i ]; then
-        tail -1 $i >> queue.sqf
-        # The last line might have options that we need
-      else # The file does not exist so we just extract the package from the queue file name
-        echo $i | sed 's/\.sqf$//' >> queue.sqf
+      if [ -e $i ]; then # We have its queue file
+        # Remove blank lines, take the last line and its first field only
+        LL=$( sed '/^$/d' $i | tail -1 )
+        # The last line might have options that we need to strip away to get to the package name
+        PKG=$( echo $LL | awk '{ print $1 }' )
+        hash
+        echo $LL >> queue.sqf
+      else # The queue file does not exist so we just extract the package from the file name
+        PKG=$( echo $i | sed 's/\.sqf$//' )
+        hash
+        echo $PKG >> queue.sqf
       fi
     done
     echo
