@@ -1,0 +1,7 @@
+Go to the sbopkg queue directory.
+Place this script there.
+List the files you need to upgrade in upgrade.sqf.
+Run this script.
+Wait!
+The result should be listed in a new sbopkg queue directory called queue.sqf.
+
