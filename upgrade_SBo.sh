@@ -25,11 +25,13 @@
 function step1() {
   # Executes Step 1 of the algorithm
   # Remove any text after the # character
+  # Remove any text starting with a - character
   # Remove empty lines
   # Sort them alphanumnerically
   # Remove duplicate lines
   # Add a white space and "u" character to unhighlight the package
   STEP1OUT=$(  sed 's/#.*$//g
+    /^-.*$/d
     /^$/d' $1 \
     | sort -n \
     | uniq )
@@ -63,7 +65,7 @@ function step2() {
       # If positive let us know the file name then
       # Strip the .sqf suffix and
       # Add the result to STEP2OUT
-      # If positive add a 'u' to STEP2UH  
+      # If positive add a 'u' to STEP2UH
       for i in *sqf; do
         NEWPACKS=$( echo $NEWPACKS $( echo $i | egrep -qv "$PACKNAME.sqf|upgrade.sqf" && \
           sed 's/#.*$//' $i | \
@@ -93,9 +95,9 @@ function step3() {
 
 function step4() {
   # Executes Step4 of of the Algorithm
-  # This script will read STEP2OUT line by line
-  # If, and only if the contents of the line are not found in the rest of the file
-  # the line will be augemented to STEP4OUT
+  # This script will read STEP2OUT a package at a time
+  # If, and only if the package name is NOT found in the rest of the string
+  # the package name will be augemented to STEP4OUT
   # otherwise it would loose its place
   unset STEP4OUT STEP4UH
   COUNTER1=0
