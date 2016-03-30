@@ -131,8 +131,7 @@ function hash() {
   # If it is not installed prefix the package name
   # with a hash (#)
   VLP=$( basename $( ls /var/log/packages/${PKG}* 2>/dev/null |\
-    grep "${PKG}-[^-]*-[^-]*-[^-]*$" | \
-    sed 's/-[^-]*-[^-]*-[^-]*$//' ) 2>/dev/null )
+    sed "/{PKG}-[^-]*-[^-]*-[^-]*$/s/-[^-]*-[^-]*-[^-]*$//" ) 2>/dev/null )
     if [ "$VLP" != "$PKG" ]; then
     # PKG is not installed so we print a # in front of the package name 
     echo -n "#" >> $OUT
