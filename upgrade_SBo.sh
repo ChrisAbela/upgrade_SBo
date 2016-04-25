@@ -130,9 +130,10 @@ function hash() {
   # Check if the package is installed
   # If it is not installed prefix the package name
   # with a hash (#)
-  VLP=$( basename $( ls /var/log/packages/${PKG}* 2>/dev/null |\
-    sed "/{PKG}-[^-]*-[^-]*-[^-]*$/s/-[^-]*-[^-]*-[^-]*$//" ) 2>/dev/null )
-    if [ "$VLP" != "$PKG" ]; then
+  VLP=$( basename $( ls /var/log/packages/${1}* 2>/dev/null |\
+    grep "${1}-[^-]*-[^-]*-[^-]*$" |\
+    sed "s/-[^-]*-[^-]*-[^-]*$//" ) 2>/dev/null )
+    if [ "$VLP" != "$1" ]; then
     # PKG is not installed so we print a # in front of the package name 
     echo -n "#" >> $OUT
   fi
@@ -165,10 +166,10 @@ while true; do
         LL=$( sed '/^$/d' $j | tail -1 )
         # The last line might have options that we need to strip away to get to the package name
         PKG=$( echo $LL | awk '{ print $1 }' )
-        hash
+        hash $PKG
         echo $LL >> $OUT
       else PKG=$i
-        hash
+        hash $PKG
         echo $i >> $OUT # No Queue file was found 
       fi
     done
