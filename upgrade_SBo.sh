@@ -67,7 +67,7 @@ function step2() {
       # Add the result to STEP2OUT
       # If positive add a 'u' to STEP2UH
       for i in *sqf; do
-        NEWPACKS=$( echo $NEWPACKS $( echo $i | egrep -qv "$PACKNAME.sqf|upgrade.sqf" && \
+        NEWPACKS=$( echo $NEWPACKS $( echo $i | egrep -qv "^${PACKNAME}.sqf$|^${UPGRADE}$|^${OUT}$" && \
           sed 's/#.*$//' $i | \
           egrep -qe "^@${PACKNAME}$|^@${PACKNAME} | @${PACKNAME}$| @${PACKNAME} |^${PACKNAME}$|^${PACKNAME} | ${PACKNAME}$| ${PACKNAME} " && \
             echo "$i" | \
